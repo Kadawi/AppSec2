@@ -91,8 +91,11 @@ def spell_check():
     txt = None
     if request.method == 'POST':
         txt = request.form['inputtext']
-        check = subprocess.run(["./a.out", txt, 'wordlist.txt'], stdout=subprocess.PIPE,)
-        misspelled = check.stdout
+        with open("input.txt", "w") as f:
+            f.write(txt)
+        check = subprocess.run(["./a.out", "input.txt", 'wordlist.txt'], stdout=subprocess.PIPE,)
+        misspelled = check.stdout.decode('utf-8')
+        misspelled.replace("\n",", ")
     return render_template('spell_check.html', txt=txt, misspelled=misspelled)
 
 #route for logging out
