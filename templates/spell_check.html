@@ -5,8 +5,19 @@
   </head>
   <body>
     <div class="container">
-      {% if error %}
-      <p id="result"> {{ error }}</p>
+      <h1>Submit text below.</h1>
+      <br>
+      <form action="" method="post">
+        <input type="text" placeholder="Add text here." name="inputtext" value="{{
+          request.form.inputtext }}">
+        <input class="btn btn-default" type="submit" value="Spell Check">
+      </form>
+      <br>
+      {% if txt %}
+      <p id="textout"> {{ txt }}</p>
+      {% endif %}
+      {% if misspelled %}
+      <p id="misspelled"> {{ misspelled }}</p>
       {% endif %}
       <p2>Click <a href="/logout">here</a> to log out.</p2>
     </div>

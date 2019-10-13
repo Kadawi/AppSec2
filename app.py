@@ -1,8 +1,8 @@
 
 from flask import Flask, request, render_template, redirect, url_for, request, session, flash, g
 from flask_api import status
-
 from functools import wraps
+import subprocess
 
 app = Flask(__name__)
 
@@ -87,7 +87,13 @@ def login():
 @app.route('/spell_check', methods=['POST', 'GET'])
 @login_required
 def spell_check():
-    return render_template('spell_check.html')
+    misspelled = None
+    txt = None
+    if request.method == 'POST':
+        txt = request.form['inputtext']
+        check = subprocess.run(["./a.out", txt, 'wordlist.txt'], stdout=subprocess.PIPE,)
+        misspelled = check.stdout
+    return render_template('spell_check.html', txt=txt, misspelled=misspelled)
 
 #route for logging out
 @app.route('/logout')
