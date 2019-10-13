@@ -1,5 +1,6 @@
 
 from flask import Flask, request, render_template, redirect, url_for, request, session, flash, g
+from flask_api import status
 
 from functools import wraps
 
@@ -9,9 +10,9 @@ Users = {}
 
 def checkUser(dict, key):
     if key in dict.keys():
-        return false
+        return True
     else:
-        return true
+        return False
 
 #create new decorator to require login
 def login_required(f):
@@ -21,34 +22,44 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('You need to login first.')
-            return redirect(url_for('login'))
+            errorMess = 'You need to login first.'
+            return errorMess, status.HTTP_401_UNAUTHORIZED
+    wrap.__name__ = f.__name__
     return wrap
 
 #secret key for establishing sessions
-app.secret_key = "replaceAndMoveLater"
+app.secret_key = "replaceAndMaybeMoveLater"
 
 @app.route('/')
 def home():
-    ##return "Hello, world!"
-    return render_template('home.html')
+#    ##return "Hello, world!"
+#    return render_template('home.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    if __name__ == '__main__':
+        app.run(debug=True)
 
-@app.route('/welcome')
-def welcome():
-    return render_template('welcome.html')
+    return redirect(url_for('register'))
 
-#@app.route('/register', methods=['POST', 'GET'])
-#def register():
-#    if request.method == 'POST':
-#        user = request.form['uname']
-#        pwd = request.form['pword']
-#        2fa = request.form['2fa']
-        if checkKey(Users, user)
-            Users{user: {'pass': pwd, '2fa': 2fa}}
-        else flash('Failure')
+#@app.route('/welcome')
+#def welcome():
+#    return render_template('welcome.html')
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        message = None
+        user = request.form['uname']
+        pwd = request.form['pword']
+        mfa = request.form['2fa']
+        if (not (checkUser(Users, user))):
+            Users[user] = {}
+            Users[user] = {'pass': pwd, 'twofa': mfa}
+            message = "success"
+
+        else:
+            message = "failure"
+            #flash('Failure')
+    return render_template('register.html', message=message)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -56,30 +67,36 @@ def login():
     error = None
     if request.method == 'POST':
         #verify login credentials
-        if request.form['uname'] != 'admin' or request.form['pword'] != 'admin':
-            #return failure if incorrect credentials
-            error = 'failure'
+        user = request.form['uname']
+        pwd = request.form['pword']
+        mfa = request.form['2fa']
+        if (not (checkUser(Users, user))):
+            error = 'Incorrect'
+        elif pwd != Users[user]['pass']:
+            error = 'Incorrect'
+        elif mfa != Users[user]['twofa']:
+            error = "Two-factor failure"
         else:
             #Set sessionID on success
             session['logged_in'] = True
             #add success message here
-            flash('Success')
-            #redirect to spell_check
-            return redirect(url_for('home'))
+            error = 'success'
     return render_template('login.html', error=error)
     
 
-#@app.route('/spell_check', methods=['POST', 'GET'])
-#@login_required
+@app.route('/spell_check', methods=['POST', 'GET'])
+@login_required
+def spell_check():
+    return render_template('spell_check.html')
 
 #route for logging out
-#@app.route('/logout')
-#@login_required
-#def logout():
+@app.route('/logout')
+@login_required
+def logout():
     #remove sessionID on logout
-#    session.pop('logged_in', None)
-#    flash('logged out')
+    session.pop('logged_in', None)
+    flash('logged out')
     #redirect to home
-#return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
