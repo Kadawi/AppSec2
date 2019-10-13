@@ -46,8 +46,8 @@ def home():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+    message = None
     if request.method == 'POST':
-        message = None
         user = request.form['uname']
         pwd = request.form['pword']
         mfa = request.form['2fa']
