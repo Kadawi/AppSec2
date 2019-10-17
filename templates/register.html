@@ -8,6 +8,7 @@
       <h1>Please register</h1>
       <br>
       <form action="" method="post">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}"/>
         <input type="text" placeholder="Username" name="uname" id="uname" value="{{ request.form.uname }}">
         <input type="password" placeholder="Password" name="pword" id = "pword" value="{{ request.form.pword }}">
         <input type="password" placeholder="2fa" name="2fa" id="2fa" value="{{ request.form.dosfa }}">

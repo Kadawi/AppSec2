@@ -2,9 +2,14 @@
 from flask import Flask, request, render_template, redirect, url_for, request, session, flash, g
 from flask_api import status
 from functools import wraps
+from flask_wtf.csrf import CSRFProtect
 import subprocess
+import os
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
+
+app.config.from_object('config.DefaultConfig')
 
 Users = {}
 
@@ -18,7 +23,6 @@ def checkUser(dict, key):
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        #adjust later for more secure sessionID
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
@@ -27,8 +31,9 @@ def login_required(f):
     wrap.__name__ = f.__name__
     return wrap
 
-#secret key for establishing sessions
-app.secret_key = "replaceAndMaybeMoveLater"
+#random secret key 
+app.secret_key = os.urandom(64)
+csrf = CSRFProtect(app)
 
 @app.route('/')
 def home():
@@ -36,7 +41,8 @@ def home():
 #    return render_template('home.html')
 
     if __name__ == '__main__':
-        app.run(debug=True)
+        app.run()
+
 
     return redirect(url_for('register'))
 
@@ -49,6 +55,7 @@ def register():
     message = None
     if request.method == 'POST':
         user = request.form['uname']
+        #pwd = sha256_crypt.encrypt(request.form['pword'])
         pwd = request.form['pword']
         mfa = request.form['2fa']
         if (not (checkUser(Users, user))):
@@ -68,6 +75,7 @@ def login():
     if request.method == 'POST':
         #verify login credentials
         user = request.form['uname']
+        #pwd = sha256_crypt.encrypt(request.form['pword'])
         pwd = request.form['pword']
         mfa = request.form['2fa']
         if (not (checkUser(Users, user))):

@@ -8,6 +8,7 @@
       <h1>Please log in.</h1>
       <br>
       <form action="" method="post">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}"/>
         <input type="text" placeholder="Username" name="uname" id="uname" value="{{
           request.form.uname }}">
          <input type="password" placeholder="Password" name="pword" id="pword" value="{{
