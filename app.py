@@ -5,7 +5,7 @@ from functools import wraps
 from flask_wtf.csrf import CSRFProtect
 import subprocess
 import os
-from passlib.hash import sha256_crypt
+from passlib.hash import sha256_crypt, pbkdf2_sha256
 
 app = Flask(__name__)
 
@@ -37,8 +37,6 @@ csrf = CSRFProtect(app)
 
 @app.route('/')
 def home():
-#    ##return "Hello, world!"
-#    return render_template('home.html')
 
     if __name__ == '__main__':
         app.run()
@@ -46,17 +44,13 @@ def home():
 
     return redirect(url_for('register'))
 
-#@app.route('/welcome')
-#def welcome():
-#    return render_template('welcome.html')
-
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     message = None
     if request.method == 'POST':
         user = request.form['uname']
-        #pwd = sha256_crypt.encrypt(request.form['pword'])
-        pwd = request.form['pword']
+        pwd = pbkdf2_sha256.hash(request.form['pword'])
+        #pwd = request.form['pword']
         mfa = request.form['2fa']
         if (not (checkUser(Users, user))):
             Users[user] = {}
@@ -80,7 +74,8 @@ def login():
         mfa = request.form['2fa']
         if (not (checkUser(Users, user))):
             error = 'Incorrect'
-        elif pwd != Users[user]['pass']:
+        elif not(pbkdf2_sha256.verify(str(pwd), str(Users[user]['pass']))):
+        #elif pwd != Users[user]['pass']:
             error = 'Incorrect'
         elif mfa != Users[user]['twofa']:
             error = "Two-factor failure"
