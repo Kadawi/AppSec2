@@ -1,7 +1,10 @@
-passlib==1.7.1
-Flask==1.0.2
-Flask_WTF==0.14.2
+Flask_API==1.1
+requests==2.21.0
+Pygments==2.3.1
 setuptools==41.0.1
 Werkzeug==0.14.1
-Flask_API==1.1
-Pygments==2.3.1
+passlib==1.7.1
+Flask_WTF==0.14.2
+Flask==1.0.2
+beautifulsoup4==4.8.1
+coverage==4.5.4
