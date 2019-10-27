@@ -1,6 +1,5 @@
 before_install:
-	-sudo pip3 install -r requirements.txt
-
+  -sudo pip3 install -r requirements.txt
 scripts:
   -flask run &
   -tox
