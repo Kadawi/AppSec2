@@ -2,8 +2,5 @@ before_install
 	-sudo pip3 install -r requirements.txt
 
 scripts:
-	-detox
   -flask run &
-	-python3 scrape_site.py
-	-coverage run test_spell.py
-	-coverage report
+  -tox
