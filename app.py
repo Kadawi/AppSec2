@@ -6,8 +6,10 @@ from flask_wtf.csrf import CSRFProtect
 import subprocess
 import os
 from passlib.hash import sha256_crypt, pbkdf2_sha256
+from flask_talisman import Talisman
 
 app = Flask(__name__)
+talisman = Talisman(app, referrer_policy=same-origin)
 
 app.config.from_object('config.DefaultConfig')
 
