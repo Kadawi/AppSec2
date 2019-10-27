@@ -1,4 +1,4 @@
-before_install
+before_install:
 	-sudo pip3 install -r requirements.txt
 
 scripts:
