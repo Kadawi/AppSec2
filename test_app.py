@@ -4,7 +4,6 @@ import requests
 import string
 import random
 
-#WEBSERVICE MUST BE RESTARTED BEFORE EACH RUN
 
 server_address = "http://127.0.0.1:5000"
 
@@ -12,7 +11,8 @@ def randomString(stringLength=10):
 	#Generate a random string of fixed length
 		letters = string.ascii_lowercase
 		return ''.join(random.choice(letters) for i in range(stringLength))
-
+	
+#Prevents duplicate registration errors when running tests in succession.
 randomUser = randomString()
 
 def getElementByID(text, eid):
