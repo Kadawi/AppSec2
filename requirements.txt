@@ -3,8 +3,8 @@ requests==2.21.0
 Flask_WTF==0.14.2
 Pygments==2.3.1
 setuptools==41.0.1
-Flask==1.0.2
+Flask==1.1.2
 passlib==1.7.1
 Flask_API==1.1
-beautifulsoup4==4.8.1
+beautifulsoup4==4.9.3
 tox==3.23.0
