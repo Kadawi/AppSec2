@@ -7,3 +7,4 @@ Flask==1.0.2
 passlib==1.7.1
 Flask_API==1.1
 beautifulsoup4==4.8.1
+tox==3.23.0
